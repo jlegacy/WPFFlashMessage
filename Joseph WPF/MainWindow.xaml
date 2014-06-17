@@ -1,0 +1,129 @@
+﻿<Window x:Class="Joseph_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+
+    <Window.Resources>
+        <ControlTemplate x:Key="MyErrorMessage"
+                         TargetType="{x:Type Label}">
+            <StackPanel Orientation="Horizontal"
+                        Name="ErrorMessage">
+                <Border CornerRadius="4"
+                        BorderThickness="0"
+                        Background="Red"
+                        VerticalAlignment="Center"
+                        Margin="4,0"
+                        BorderBrush="Transparent">
+                    <Label Foreground="White"
+                           VerticalAlignment="Center"
+                           Padding="4,2"
+                           FontWeight="Bold"
+                           Name="Part1"
+                           Visibility="Visible">Error</Label>
+                </Border>
+                <!-- This TextBlock accepts the content from the parent 'label'. It is not actually displayed, just used to bind data-->
+                <TextBlock Name="Part3"
+                           Text="{TemplateBinding Content}"
+                           Visibility="Collapsed"></TextBlock>
+                <!-- This TextBlock binds to the one above and triggers an animation when it gets updated. -->
+                <!-- Its required because TemplateBinding does not allow NotifyOnTargetUpdate -->
+                <TextBlock Margin="2"
+                           Name="Part2"
+                           Foreground="Red"
+                           Padding="3"
+                           Text="{Binding ElementName=Part3, Path=Text,NotifyOnTargetUpdated=True}"
+                           VerticalAlignment="Center"></TextBlock>
+            </StackPanel>
+            <ControlTemplate.Triggers>
+                <!-- When Text property of Part2 is blank hide entire control-->
+                <Trigger SourceName="Part3"
+                         Property="Text"
+                         Value="">
+                    <Setter TargetName="ErrorMessage"
+                            Property="Visibility"
+                            Value="Hidden"></Setter>
+                </Trigger>
+                <!-- This trigger is called when Part2 updates which in turn is updated by Part3's databind.
+                     It uses animation to make the label fade away after a few seconds.                        -->
+                <EventTrigger SourceName="Part2"
+                              RoutedEvent="Binding.TargetUpdated">
+                    <BeginStoryboard>
+                        <Storyboard TargetName="ErrorMessage">
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0"
+                                             To="1.0" />
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:2"
+                                             From="1.0"
+                                             To="0.0"
+                                             BeginTime="0:0:1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <ControlTemplate x:Key="MyWarningMessage"
+                         TargetType="{x:Type Label}">
+            <StackPanel Orientation="Horizontal"
+                        Name="ErrorMessage">
+                <Border CornerRadius="4"
+                        BorderThickness="0"
+                        Background="Yellow"
+                        VerticalAlignment="Center"
+                        Margin="4,0"
+                        BorderBrush="Transparent">
+                    <Label Foreground="White"
+                           VerticalAlignment="Center"
+                           Padding="4,2"
+                           FontWeight="Bold"
+                           Name="Part1"
+                           Visibility="Visible">Error</Label>
+                </Border>
+                <!-- This TextBlock accepts the content from the parent 'label'. It is not actually displayed, just used to bind data-->
+                <TextBlock Name="Part3"
+                           Text="{TemplateBinding Content}"
+                           Visibility="Collapsed"></TextBlock>
+                <!-- This TextBlock binds to the one above and triggers an animation when it gets updated. -->
+                <!-- Its required because TemplateBinding does not allow NotifyOnTargetUpdate -->
+                <TextBlock Margin="2"
+                           Name="Part2"
+                           Foreground="Red"
+                           Padding="3"
+                           Text="{Binding ElementName=Part3, Path=Text,NotifyOnTargetUpdated=True}"
+                           VerticalAlignment="Center"></TextBlock>
+            </StackPanel>
+            <ControlTemplate.Triggers>
+                <!-- When Text property of Part2 is blank hide entire control-->
+                <Trigger SourceName="Part3"
+                         Property="Text"
+                         Value="">
+                    <Setter TargetName="ErrorMessage"
+                            Property="Visibility"
+                            Value="Hidden"></Setter>
+                </Trigger>
+                <!-- This trigger is called when Part2 updates which in turn is updated by Part3's databind.
+                     It uses animation to make the label fade away after a few seconds.                        -->
+                <EventTrigger SourceName="Part2"
+                              RoutedEvent="Binding.TargetUpdated">
+                    <BeginStoryboard>
+                        <Storyboard TargetName="ErrorMessage">
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0"
+                                             To="1.0" />
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:2"
+                                             From="1.0"
+                                             To="0.0"
+                                             BeginTime="0:0:1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Window.Resources>
+    <StackPanel Orientation="Vertical">
+        <Label Template="{StaticResource MyErrorMessage}"
+               Name="Label1"></Label>
+        <Button Click="button1_Click">click to test</Button>
+    </StackPanel>
+</Window>
